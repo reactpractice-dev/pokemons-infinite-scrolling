@@ -1,14 +1,13 @@
 import { useState } from "react";
 import { useEffect } from "react";
 
-const PAGE_SIZE = 6;
+const PAGE_SIZE = 15;
 
 const fetchPokemonPage = async (offset) => {
   const response = await fetch(
     `https://pokeapi.co/api/v2/pokemon?limit=${PAGE_SIZE}&offset=${offset}`
   );
   const data = await response.json();
-  console.log(data);
   return data.results;
 };
 
@@ -20,7 +19,14 @@ const PokemonsList = () => {
     );
   }, []);
   return (
-    <div style={{ maxWidth: "500px", margin: "auto" }}>
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "250px 250px 250px 250px 250px",
+        margin: "auto",
+        maxWidth: "1250px",
+      }}
+    >
       {pokemons.map((pokemon) => (
         <div
           key={pokemon.name}
@@ -28,9 +34,14 @@ const PokemonsList = () => {
             border: "1px solid lightgray",
             padding: "5px",
             margin: "5px",
+            textAlign: "center",
           }}
         >
           <h3>{pokemon.name}</h3>
+          <img
+            src={`https://img.pokemondb.net/artwork/${pokemon.name}.jpg`}
+            width="200px"
+          />
         </div>
       ))}
     </div>
