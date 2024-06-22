@@ -1,7 +1,7 @@
-import RandomQuote from "./RandomQuote";
+import PokemonsList from "./PokemonsList";
 
 function App() {
-  return <RandomQuote />;
+  return <PokemonsList />;
 }
 
 export default App;
