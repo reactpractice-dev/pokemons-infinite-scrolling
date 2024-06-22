@@ -13,37 +13,45 @@ const fetchPokemonPage = async (offset) => {
 
 const PokemonsList = () => {
   const [pokemons, setPokemons] = useState([]);
+  const [isPending, setIsPending] = useState(false);
   useEffect(() => {
-    fetchPokemonPage().then((firstPageOfPokemons) =>
-      setPokemons(firstPageOfPokemons)
-    );
+    setIsPending(true);
+    fetchPokemonPage().then((firstPageOfPokemons) => {
+      setPokemons(firstPageOfPokemons);
+      setIsPending(false);
+    });
   }, []);
   return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "250px 250px 250px 250px 250px",
-        margin: "auto",
-        maxWidth: "1250px",
-      }}
-    >
-      {pokemons.map((pokemon) => (
-        <div
-          key={pokemon.name}
-          style={{
-            border: "1px solid lightgray",
-            padding: "5px",
-            margin: "5px",
-            textAlign: "center",
-          }}
-        >
-          <h3>{pokemon.name}</h3>
-          <img
-            src={`https://img.pokemondb.net/artwork/${pokemon.name}.jpg`}
-            width="200px"
-          />
-        </div>
-      ))}
+    <div>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "250px 250px 250px 250px 250px",
+          margin: "auto",
+          maxWidth: "1250px",
+        }}
+      >
+        {pokemons.map((pokemon) => (
+          <div
+            key={pokemon.name}
+            style={{
+              border: "1px solid lightgray",
+              padding: "5px",
+              margin: "5px",
+              textAlign: "center",
+            }}
+          >
+            <h3>{pokemon.name}</h3>
+            <img
+              src={`https://img.pokemondb.net/artwork/${pokemon.name}.jpg`}
+              width="200px"
+            />
+          </div>
+        ))}
+      </div>
+      {isPending && (
+        <div style={{ textAlign: "center", margin: "10px" }}>Loading ...</div>
+      )}
     </div>
   );
 };
