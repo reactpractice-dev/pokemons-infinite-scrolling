@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 
@@ -14,12 +15,25 @@ const fetchPokemonPage = async (offset) => {
 const PokemonsList = () => {
   const [pokemons, setPokemons] = useState([]);
   const [isPending, setIsPending] = useState(false);
+  const endOfPageRef = useRef();
   useEffect(() => {
     setIsPending(true);
     fetchPokemonPage().then((firstPageOfPokemons) => {
       setPokemons(firstPageOfPokemons);
       setIsPending(false);
     });
+  }, []);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      const endOfPage = entries[0];
+      if (endOfPage.isIntersecting) {
+        console.log("is intersecting");
+      } else {
+        console.log("is not intersecting");
+      }
+    });
+    observer.observe(endOfPageRef.current);
   }, []);
   return (
     <div>
@@ -52,6 +66,7 @@ const PokemonsList = () => {
       {isPending && (
         <div style={{ textAlign: "center", margin: "10px" }}>Loading ...</div>
       )}
+      <div ref={endOfPageRef}></div>
     </div>
   );
 };
