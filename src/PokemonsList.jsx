@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 const PAGE_SIZE = 12;
 
-const fetchPokemonPage = async (offset) => {
+const fetchPokemonPage = async (offset = 0) => {
   const response = await fetch(
     `https://pokeapi.co/api/v2/pokemon?limit=${PAGE_SIZE}&offset=${offset}`
   );
