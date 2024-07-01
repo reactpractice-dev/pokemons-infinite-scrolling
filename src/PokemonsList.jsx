@@ -1,8 +1,9 @@
 import { useRef } from "react";
+import { useCallback } from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 
-const PAGE_SIZE = 15;
+const PAGE_SIZE = 12;
 
 const fetchPokemonPage = async (offset) => {
   const response = await fetch(
@@ -16,6 +17,8 @@ const PokemonsList = () => {
   const [pokemons, setPokemons] = useState([]);
   const [isPending, setIsPending] = useState(false);
   const endOfPageRef = useRef();
+  const intersectionCallback = useRef();
+
   useEffect(() => {
     setIsPending(true);
     fetchPokemonPage().then((firstPageOfPokemons) => {
@@ -24,25 +27,40 @@ const PokemonsList = () => {
     });
   }, []);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
+  const handleIntersection = useCallback(
+    (entries) => {
       const endOfPage = entries[0];
-      if (endOfPage.isIntersecting) {
+      if (endOfPage.isIntersecting && !isPending) {
         console.log("is intersecting");
       } else {
         console.log("is not intersecting");
       }
-    });
+    },
+    [isPending]
+  );
+
+  useEffect(() => {
+    intersectionCallback.current = handleIntersection;
+  }, [handleIntersection]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) =>
+      intersectionCallback.current(entries)
+    );
     observer.observe(endOfPageRef.current);
   }, []);
+
   return (
     <div>
+      <h1 style={{ textAlign: "center" }}>
+        Infinite scrolling list of pokemons
+      </h1>
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "250px 250px 250px 250px 250px",
+          gridTemplateColumns: "250px 250px 250px 250px",
           margin: "auto",
-          maxWidth: "1250px",
+          maxWidth: "1000px",
         }}
       >
         {pokemons.map((pokemon) => (
