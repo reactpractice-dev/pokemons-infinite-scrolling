@@ -1,5 +1,4 @@
 import { useRef } from "react";
-import { useCallback } from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 
@@ -27,28 +26,25 @@ const PokemonsList = () => {
     });
   }, []);
 
-  const handleIntersection = useCallback(
-    (entries) => {
-      const endOfPage = entries[0];
-      if (endOfPage.isIntersecting && !isPending) {
-        console.log("is intersecting");
-      } else {
-        console.log("is not intersecting");
-      }
-    },
-    [isPending]
-  );
-
-  useEffect(() => {
-    intersectionCallback.current = handleIntersection;
-  }, [handleIntersection]);
-
   useEffect(() => {
     const observer = new IntersectionObserver((entries) =>
       intersectionCallback.current(entries)
     );
     observer.observe(endOfPageRef.current);
   }, []);
+
+  const handleIntersection = (entries) => {
+    const endOfPage = entries[0];
+    if (endOfPage.isIntersecting && !isPending) {
+      console.log("is intersecting");
+    } else {
+      console.log("is not intersecting");
+    }
+  };
+
+  useEffect(() => {
+    intersectionCallback.current = handleIntersection;
+  });
 
   return (
     <div>
