@@ -36,9 +36,11 @@ const PokemonsList = () => {
   const handleIntersection = (entries) => {
     const endOfPage = entries[0];
     if (endOfPage.isIntersecting && !isPending) {
-      console.log("is intersecting");
-    } else {
-      console.log("is not intersecting");
+      setIsPending(true);
+      fetchPokemonPage(pokemons.length).then((newPageOfPokemons) => {
+        setPokemons([...pokemons, ...newPageOfPokemons]);
+        setIsPending(false);
+      });
     }
   };
 
